@@ -26,7 +26,7 @@ from selenium.webdriver import Chrome
 from http.cookies import SimpleCookie
 from selenium import webdriver
 import selenium.webdriver.support.ui as ui
-from selenium.common.exceptions import, TimeoutException
+from selenium.common.exceptions import TimeoutException
 
 driver = Chrome("./chromedriver")
 driver.get("https://fuli.gamer.com.tw")
@@ -105,7 +105,7 @@ for times in range(2):
         driver.switch_to.default_content()
         agree_confirm = wait.until(lambda driver: driver.find_element_by_id("agree-confirm")) #我已閱讀注意事項，並確認兌換此商品
         agree_confirm.click()
-        driver.find_element_by_class_name("c-primary").click()  # 確定兌換
+        driver.find_element_by_class_name("c-primary").click()  #確定兌換
         time.sleep(3)
         submit = wait.until(lambda driver: driver.find_element_by_class_name("btn-primary")) # 您確定要兌換此商品嗎？
         submit.click()
