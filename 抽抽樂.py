@@ -28,10 +28,11 @@ from selenium import webdriver
 import selenium.webdriver.support.ui as ui
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.keys import Keys
 
 driver = Chrome("./chromedriver")
-driver.maximize_window()
 driver.get("https://fuli.gamer.com.tw")
+driver.maximize_window()
 
 #selenium add cookies(帳密)
 rawdata = 'add cookies'
@@ -42,7 +43,6 @@ for key, morsel in cookie.items():
     #print(key, morsel.value)
     cookies[key] = morsel.value
     driver.add_cookie({"name":key, "value":morsel.value})
-
 
 times = 0 #selenium 執行次數
 for times in range(10):
@@ -97,6 +97,7 @@ for times in range(10):
       
         #agree_confirm
         driver.switch_to.default_content()
+        driver.find_element_by_tag_name('body').send_keys(Keys.PAGE_DOWN) #Selenium Page down(https://stackoverflow.com/questions/53701759/scroll-with-keys-page-down-in-selenium-python)
         agree_confirm = wait.until(lambda driver: driver.find_element_by_xpath('//*[@id="buyD"]/div[12]/div/label'))
         action = ActionChains(driver) 
         action.move_to_element(agree_confirm).click().perform() #滑鼠移動到"我已閱讀注意事項，並確認兌換此商品"<label> Tag元素點擊打勾(https://stackoverflow.com/questions/40170915/why-actionchainsdriver-move-to-elementelem-click-perform-twice)
