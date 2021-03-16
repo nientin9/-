@@ -43,13 +43,13 @@ for key, morsel in cookie.items():
     driver.add_cookie({"name":key, "value":morsel.value})
 
 times = 0 #selenium 執行次數
-for times in range(2):
+for times in range(10):
     for lucky_draw_link in lucky_draw_links:
-        driver.get(lucky_draw_link)
+        driver.get(lucky_draw_link) #get(抽抽樂連結)
         #driver.maximize_window()
         driver.find_element_by_class_name("c-accent-o").click()
         
-        wait = ui.WebDriverWait(driver, 10) #定位耗費時間(https://www.cnblogs.com/awakenedy/articles/9778634.html)
+        wait = ui.WebDriverWait(driver, 10) #Python+Selenium定位不到元素常見原因及解決辦法(https://www.cnblogs.com/awakenedy/articles/9778634.html)
         #question-popup
         question_popup_element_exist = True if len(driver.find_elements_by_id("answer-count")) > 0 else False #利用"共需答對幾題?"判斷是否彈跳出勇者問答題
         if question_popup_element_exist == True:
@@ -61,9 +61,7 @@ for times in range(2):
             for questions in range(answer_count):
                 question_element_id = "question-" + str(element_id)
                 options = wait.until(lambda driver: driver.find_element_by_id(question_element_id).find_elements_by_class_name("fuli-option")) #options = list[0, 1, 2]
-                print("options:", options) 
                 data_answer = wait.until(lambda driver: driver.find_element_by_id(question_element_id).find_element_by_tag_name('a')).get_attribute('data-answer') #data_answer = 'str' 3
-                print("data_answer:", data_answer)
                 data_answer = int(data_answer)-1
                 options[data_answer].click()
                 #time.sleep(3) #wait for the webpage to load before executing the next line of code (https://stackoverflow.com/questions/60824679/time-sleep-on-chromedriver)
@@ -72,7 +70,7 @@ for times in range(2):
 
             # watch_ad
             watch_ad_element = wait.until(lambda driver: driver.find_element_by_id("btn-buy"))
-            driver.execute_script("arguments[0].click();", watch_ad_element) #there is another element (div below the button) will receive the click. driver.execute_script("arguments[0].click();", element) Takes your locator (element) as first argument and perform the action of click.(https://sqa.stackexchange.com/questions/40678/using-python-selenium-not-able-to-perform-click-operation)
+            driver.execute_script("arguments[0].click();", watch_ad_element) #there is another element (div below the button) will receive the click. Driver.execute_script("arguments[0].click();", element) Takes your locator (element) as first argument and perform the action of click.(https://sqa.stackexchange.com/questions/40678/using-python-selenium-not-able-to-perform-click-operation)
 
         # if_watch_ad
         try:
@@ -95,9 +93,7 @@ for times in range(2):
                 wait.until(lambda driver: driver.find_element_by_id("close_button_icon")).click()
             if close_circle_element_exist == True:
                 wait.until(lambda driver: driver.find_element_by_xpath('//*[@id="google-rewarded-video"]/img[3]')).click()
-        print("close_element_exist:", close_element_exist, "/close_circle_element_exist", close_circle_element_exist)
-         
-
+      
         # agree_confirm
         driver.switch_to.default_content()
         agree_confirm = wait.until(lambda driver: driver.find_element_by_id("agree-confirm"))  # 我已閱讀注意事項，並確認兌換此商品
