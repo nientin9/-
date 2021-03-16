@@ -30,6 +30,7 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.action_chains import ActionChains
 
 driver = Chrome("./chromedriver")
+driver.maximize_window()
 driver.get("https://fuli.gamer.com.tw")
 
 #selenium add cookies(帳密)
@@ -42,12 +43,12 @@ for key, morsel in cookie.items():
     cookies[key] = morsel.value
     driver.add_cookie({"name":key, "value":morsel.value})
 
+
 times = 0 #selenium 執行次數
 for times in range(10):
     for lucky_draw_link in lucky_draw_links:
         driver.get(lucky_draw_link) #get(抽抽樂連結)
-        #driver.maximize_window()
-        driver.find_element_by_class_name("c-accent-o").click()
+        driver.find_element_by_class_name("c-accent-o").click() #看廣告免費兌換
         
         wait = ui.WebDriverWait(driver, 10) #Python+Selenium定位不到元素常見原因及解決辦法(https://www.cnblogs.com/awakenedy/articles/9778634.html)
         #question-popup
@@ -68,11 +69,11 @@ for times in range(10):
                 element_id += 1
                 questions += 1
 
-            # watch_ad
+            #watch_ad
             watch_ad_element = wait.until(lambda driver: driver.find_element_by_id("btn-buy"))
             driver.execute_script("arguments[0].click();", watch_ad_element) #there is another element (div below the button) will receive the click. Driver.execute_script("arguments[0].click();", element) Takes your locator (element) as first argument and perform the action of click.(https://sqa.stackexchange.com/questions/40678/using-python-selenium-not-able-to-perform-click-operation)
 
-        # if_watch_ad
+        #if_watch_ad
         try:
             if_watch_ad = wait.until(lambda driver: driver.find_element_by_class_name("btn-primary"))
             if_watch_ad.click()
@@ -80,27 +81,27 @@ for times in range(10):
             print('if_watch_ad: TimeoutException(沒有彈跳出"是否觀看廣告?"視窗)')
             pass
 
-        # close_ad
-        # print(len(driver.find_elements_by_tag_name('iframe')))
+        #close_ad
+        #print(len(driver.find_elements_by_tag_name('iframe')))
         iframe = wait.until(lambda driver: driver.find_elements_by_tag_name('iframe')[-1]) #python+selenium 自動化過程中遇到的元素不可見時間以及webelement不可見的處理方法(https://iter01.com/467737.html)
         driver.switch_to.frame(iframe)
-        # 有兩種不同的close_ad按鈕(視廣告出現型態而定)
+        #有兩種不同的close_ad按鈕(視廣告出現型態而定)
         close_element_exist = True if len(driver.find_elements_by_id("close_button_icon")) > 0 else False
         close_circle_element_exist = True if len(driver.find_elements_by_xpath('//*[@id="google-rewarded-video"]/img[3]')) > 0 else False
         if close_element_exist == True or close_circle_element_exist == True:
-            time.sleep(30)  # 廣告30秒
+            time.sleep(30)  #廣告30秒
             if close_element_exist == True:
                 wait.until(lambda driver: driver.find_element_by_id("close_button_icon")).click()
             if close_circle_element_exist == True:
                 wait.until(lambda driver: driver.find_element_by_xpath('//*[@id="google-rewarded-video"]/img[3]')).click()
       
-        # agree_confirm
+        #agree_confirm
         driver.switch_to.default_content()
-        agree_confirm = wait.until(lambda driver: driver.find_element_by_xpath('//*[@id="buyD"]/div[12]/div/label'))  # 我已閱讀注意事項，並確認兌換此商品
+        agree_confirm = wait.until(lambda driver: driver.find_element_by_xpath('//*[@id="buyD"]/div[12]/div/label'))
         action = ActionChains(driver) 
-        action.move_to_element(agree_confirm).click().perform() #滑鼠移動到"我已閱讀注意事項，並確認兌換此商品"<label> Tag元素點擊(https://stackoverflow.com/questions/40170915/why-actionchainsdriver-move-to-elementelem-click-perform-twice)
+        action.move_to_element(agree_confirm).click().perform() #滑鼠移動到"我已閱讀注意事項，並確認兌換此商品"<label> Tag元素點擊打勾(https://stackoverflow.com/questions/40170915/why-actionchainsdriver-move-to-elementelem-click-perform-twice)
         driver.find_element_by_class_name("c-primary").click()  #確定兌換
-        submit = wait.until(lambda driver: driver.find_element_by_class_name("btn-primary")) # 您確定要兌換此商品嗎？
+        submit = wait.until(lambda driver: driver.find_element_by_class_name("btn-primary")) #您確定要兌換此商品嗎？
         submit.click()
     times += 1
 driver.quit()
