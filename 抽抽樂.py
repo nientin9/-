@@ -27,6 +27,7 @@ from http.cookies import SimpleCookie
 from selenium import webdriver
 import selenium.webdriver.support.ui as ui
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.action_chains import ActionChains
 
 driver = Chrome("./chromedriver")
 driver.get("https://fuli.gamer.com.tw")
@@ -99,8 +100,9 @@ for times in range(2):
 
         # agree_confirm
         driver.switch_to.default_content()
-        agree_confirm = wait.until(lambda driver: driver.find_element_by_id("agree-confirm")) #我已閱讀注意事項，並確認兌換此商品
-        agree_confirm.click()
+        agree_confirm = wait.until(lambda driver: driver.find_element_by_id("agree-confirm"))  # 我已閱讀注意事項，並確認兌換此商品
+        action = ActionChains(driver) 
+        action.move_to_element(agree_confirm).click().perform() #滑鼠移動到"我已閱讀注意事項，並確認兌換此商品"<label> Tag元素點擊(https://stackoverflow.com/questions/40170915/why-actionchainsdriver-move-to-elementelem-click-perform-twice)
         driver.find_element_by_class_name("c-primary").click()  #確定兌換
         submit = wait.until(lambda driver: driver.find_element_by_class_name("btn-primary")) # 您確定要兌換此商品嗎？
         submit.click()
