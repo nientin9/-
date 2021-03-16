@@ -96,7 +96,7 @@ for times in range(10):
       
         # agree_confirm
         driver.switch_to.default_content()
-        agree_confirm = wait.until(lambda driver: driver.find_element_by_id("agree-confirm"))  # 我已閱讀注意事項，並確認兌換此商品
+        agree_confirm = wait.until(lambda driver: driver.find_element_by_xpath('//*[@id="buyD"]/div[12]/div/label'))  # 我已閱讀注意事項，並確認兌換此商品
         action = ActionChains(driver) 
         action.move_to_element(agree_confirm).click().perform() #滑鼠移動到"我已閱讀注意事項，並確認兌換此商品"<label> Tag元素點擊(https://stackoverflow.com/questions/40170915/why-actionchainsdriver-move-to-elementelem-click-perform-twice)
         driver.find_element_by_class_name("c-primary").click()  #確定兌換
