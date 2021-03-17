@@ -121,15 +121,7 @@ for times in range(10):
                 break
             '''    
             break
-        while True:
-            close_element_exist = True if len(driver.find_elements_by_id("close_button_icon")) > 0 else False
-            if close_element_exist == True:
-                time.sleep(30)  # 廣告30秒
-                driver.find_element_by_id("close_button_icon").click()
-            close_circle_element_exist = True if len(driver.find_elements_by_xpath('//*[@id="google-rewarded-video"]/img[3]'))> 0 else False
-            if close_circle_element_exist == True:
-                time.sleep(30)  # 廣告30秒
-                driver.find_element_by_xpath('//*[@id="google-rewarded-video"]/img[3]').click()
+        
             
       
         #agree_confirm
