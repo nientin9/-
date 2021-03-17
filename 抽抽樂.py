@@ -56,7 +56,7 @@ for times in range(10):
             print("發生錯誤，請重新嘗試(1)")
             driver.find_element_by_class_name("c-accent-o").click()
         
-        wait = ui.WebDriverWait(driver, 10) #Python+Selenium定位不到元素常見原因及解決辦法(https://www.cnblogs.com/awakenedy/articles/9778634.html)
+        wait = ui.WebDriverWait(driver, 60) #Python+Selenium定位不到元素常見原因及解決辦法(https://www.cnblogs.com/awakenedy/articles/9778634.html)
         #question-popup
         question_popup_element_exist = True if len(driver.find_elements_by_id("answer-count")) > 0 else False #利用"共需答對幾題?"判斷是否彈跳出勇者問答題
         if question_popup_element_exist == True:
@@ -97,9 +97,8 @@ for times in range(10):
             if close_element_exist == True:
                 print("close_element_exist:", close_element_exist)
                 while True:
-                    wait.until(lambda driver: driver.find_element_by_id("count_down").text == "0 秒後可獲得獎勵")
-                    break
-                time.sleep(3)
+                count_down = wait.until(lambda driver: driver.find_element_by_id("count_down").text == "0 秒後可獲得獎勵")
+                
                 driver.find_element_by_id("close_button_icon").click()
                 break
 
@@ -107,8 +106,7 @@ for times in range(10):
             if close_circle_element_exist == True:
                 print("close_circle_element_exist:", close_circle_element_exist)
                 time.sleep(3) #等待廣告開始倒數
-                while True:
-                    wait.until(lambda driver: driver.find_element_by_class_name("rewardedAdUiAttribution").text == "")
+                wait.until(lambda driver: driver.find_element_by_xpath('//*[@id="google-rewarded-video"]/img[2]').get_attribute("src") == "https://www.gstatic.com/dfp/native/play.png")
                     break
                 time.sleep(3)
                 driver.find_element_by_xpath('//*[@id="google-rewarded-video"]/img[3]').click()
