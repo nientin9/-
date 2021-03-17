@@ -54,7 +54,7 @@ for times in range(10):
         if btn_danger_element_exist == True:
             wait.until(lambda driver: driver.find_element_by_class_name("btn-danger")).click()
             print("發生錯誤，請重新嘗試(1)")
-            driver.quit()
+            driver.find_element_by_class_name("c-accent-o").click()
         
         wait = ui.WebDriverWait(driver, 10) #Python+Selenium定位不到元素常見原因及解決辦法(https://www.cnblogs.com/awakenedy/articles/9778634.html)
         #question-popup
@@ -88,28 +88,55 @@ for times in range(10):
             pass
 
         #close_ad
-        time.sleep(3) #等待換頁
         #print(len(driver.find_elements_by_tag_name('iframe')))
         iframe = wait.until(lambda driver: driver.find_elements_by_tag_name('iframe')[-1]) #python+selenium 自動化過程中遇到的元素不可見時間以及webelement不可見的處理方法(https://iter01.com/467737.html)
         driver.switch_to.frame(iframe)
         #有三種不同的close_ad按鈕(視廣告出現型態而定)
-        close_element_exist = True if len(driver.find_elements_by_id("close_button_icon")) > 0 else False
-        dismiss_button_element_exist = True if len(driver.find_elements_by_id("dismiss-button-element")) > 0 else False
-        close_circle_element_exist = True if len(driver.find_elements_by_xpath('//*[@id="google-rewarded-video"]/img[3]')) > 0 else False
-        if close_element_exist == True or dismiss_button_element_exist == True or close_circle_element_exist == True:
-            time.sleep(30)  #廣告30秒
+        while True:
+            close_element_exist = True if len(driver.find_elements_by_id("close_button_icon")) > 0 else False
             if close_element_exist == True:
-                wait.until(lambda driver: driver.find_element_by_id("close_button_icon")).click()
-            if dismiss_button_element_exist == True:
-                wait.until(lambda driver: driver.find_element_by_id("dismiss-button-element")).click()
+                print("close_element_exist:", close_element_exist)
+                while True:
+                    wait.until(lambda driver: driver.find_element_by_id("count_down").text == "0 秒後可獲得獎勵")
+                    break
+                time.sleep(3)
+                driver.find_element_by_id("close_button_icon").click()
+                break
+
+            close_circle_element_exist = True if len(driver.find_elements_by_xpath('//*[@id="google-rewarded-video"]/img[3]')) > 0 else False
             if close_circle_element_exist == True:
-                wait.until(lambda driver: driver.find_element_by_xpath('//*[@id="google-rewarded-video"]/img[3]')).click()
+                print("close_circle_element_exist:", close_circle_element_exist)
+                time.sleep(3) #等待廣告開始倒數
+                while True:
+                    wait.until(lambda driver: driver.find_element_by_class_name("rewardedAdUiAttribution").text == "")
+                    break
+                time.sleep(3)
+                driver.find_element_by_xpath('//*[@id="google-rewarded-video"]/img[3]').click()
+                break
+            '''    
+            dismiss_button_element_exist = True if len(driver.find_elements_by_id("dismiss-button-element")) > 0 else False
+            if dismiss_button_element_exist == True:
+                time.sleep(30)  # 廣告30秒
+                driver.find_element_by_id("dismiss-button-element").click()
+                break
+            '''    
+            break
+        while True:
+            close_element_exist = True if len(driver.find_elements_by_id("close_button_icon")) > 0 else False
+            if close_element_exist == True:
+                time.sleep(30)  # 廣告30秒
+                driver.find_element_by_id("close_button_icon").click()
+            close_circle_element_exist = True if len(driver.find_elements_by_xpath('//*[@id="google-rewarded-video"]/img[3]'))> 0 else False
+            if close_circle_element_exist == True:
+                time.sleep(30)  # 廣告30秒
+                driver.find_element_by_xpath('//*[@id="google-rewarded-video"]/img[3]').click()
+            
       
         #agree_confirm
         driver.switch_to.default_content()
         time.sleep(3) #等待換頁
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);") #Selenium Page down(https://stackoverflow.com/questions/20986631/how-can-i-scroll-a-web-page-using-selenium-webdriver-in-python)
-        agree_confirm = driver.find_element_css_selector('#buyD > div.flex-center.agree-confirm > div > label')
+        agree_confirm = driver.find_element_by_css_selector('#buyD > div.flex-center.agree-confirm > div > label')
         action = ActionChains(driver) 
         action.move_to_element(agree_confirm).click().perform() #滑鼠移動到"我已閱讀注意事項，並確認兌換此商品"<label> Tag元素點擊打勾(https://stackoverflow.com/questions/40170915/why-actionchainsdriver-move-to-elementelem-click-perform-twice)
         time.sleep(3) #觀察打勾
