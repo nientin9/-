@@ -120,10 +120,8 @@ for times in range(10):
                 driver.find_element_by_id("dismiss-button-element").click()
                 break
             '''    
-            break
-        
-            
-      
+            break   
+                  
         #agree_confirm
         driver.switch_to.default_content()
         time.sleep(3) #等待換頁
