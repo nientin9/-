@@ -88,8 +88,8 @@ for times in range(10):
         btn_danger_element_exist = True if len(driver.find_elements_by_class_name("btn-danger")) > 0 else False  # 發生錯誤，請重新嘗試(1)
         if btn_danger_element_exist == True:
             print("發生錯誤")
-            wait.until(lambda driver: driver.find_element_by_class_name("btn-danger")).click()
-            driver.quit()
+            #wait.until(lambda driver: driver.find_element_by_class_name("btn-danger")).click()
+            )
 
         # close_ad
         # print(len(driver.find_elements_by_tag_name('iframe')))
