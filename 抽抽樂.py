@@ -68,13 +68,14 @@ for times in range(10):
                 data_answer = wait.until(lambda driver: driver.find_element_by_id(question_element_id).find_element_by_tag_name('a')).get_attribute('data-answer')  # data_answer = 'str' 3
                 data_answer = int(data_answer) - 1
                 options[data_answer].click()
-                # time.sleep(3) #wait for the webpage to load before executing the next line of code (https://stackoverflow.com/questions/60824679/time-sleep-on-chromedriver)
+                time.sleep(3) #wait for the webpage to load before executing the next line of code (https://stackoverflow.com/questions/60824679/time-sleep-on-chromedriver)
                 element_id += 1
                 questions += 1
 
             # watch_ad
             watch_ad_element = wait.until(lambda driver: driver.find_element_by_id("btn-buy"))
             driver.execute_script("arguments[0].click();", watch_ad_element)  # there is another element (div below the button) will receive the click. Driver.execute_script("arguments[0].click();", element) Takes your locator (element) as first argument and perform the action of click.(https://sqa.stackexchange.com/questions/40678/using-python-selenium-not-able-to-perform-click-operation)
+            time.sleep(3)
 
         # if_watch_ad
         try:
@@ -83,6 +84,12 @@ for times in range(10):
         except TimeoutException:
             print('if_watch_ad: TimeoutException(沒有彈跳出"是否觀看廣告?"視窗)')
             pass
+        
+        btn_danger_element_exist = True if len(driver.find_elements_by_class_name("btn-danger")) > 0 else False  # 發生錯誤，請重新嘗試(1)
+        if btn_danger_element_exist == True:
+            print("發生錯誤")
+            wait.until(lambda driver: driver.find_element_by_class_name("btn-danger")).click()
+            driver.quit()
 
         # close_ad
         # print(len(driver.find_elements_by_tag_name('iframe')))
@@ -111,13 +118,7 @@ for times in range(10):
                 driver.find_element_by_xpath('//*[@id="google-rewarded-video"]/img[3]').click()
                 break
 
-            btn_danger_element_exist = True if len(driver.find_elements_by_class_name("btn-danger")) > 0 else False  # 發生錯誤，請重新嘗試(1)
-            if btn_danger_element_exist == True:
-                wait.until(lambda driver: driver.find_element_by_class_name("btn-danger")).click()
-                print("發生錯誤，請重新嘗試(1)")
-                driver.find_element_by_class_name("c-accent-o").click()
-                wait.until(lambda driver: driver.find_element_by_class_name("btn-primary")).click()
-                continue
+
 
         # agree_confirm
         driver.switch_to.default_content()
