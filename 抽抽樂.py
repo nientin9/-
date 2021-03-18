@@ -117,6 +117,7 @@ for times in range(10):
                 time.sleep(3) # 播放結束
                 driver.find_element_by_xpath('//*[@id="google-rewarded-video"]/img[3]').click()
                 break
+            break 
 
 
 
