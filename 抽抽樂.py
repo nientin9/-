@@ -95,25 +95,25 @@ for times in range(10):
             if close_element_exist == True:
                 print("close_element_exist:", close_element_exist)
                 try:
-                    count_down = WebDriverWait(driver, 30).until(EC.invisibility_of_element_located((By.ID,"count_down")))  # visibility: hidden 0 秒後可獲得獎勵(https://www.itread01.com/content/1547684126.html)
-                    print(count_down)
+                    WebDriverWait(driver, 180).until(EC.invisibility_of_element_located((By.ID,"count_down")))  # visibility: hidden 0 秒後可獲得獎勵(https://www.itread01.com/content/1547684126.html)
                     driver.find_element_by_id("close_button_icon").click()
                 except TimeoutException:
-                    print("TimeoutException")
-                    WebDriverWait(driver, 30).until(EC.invisibility_of_element_located((By.ID, "count_down")))
+                    print("TimeoutException", TimeoutException)
+                    WebDriverWait(driver, 180).until(EC.invisibility_of_element_located((By.ID, "count_down")))
                     driver.find_element_by_id("close_button_icon").click()
                 break
     
             dismiss_button_element_exist = True if len(driver.find_elements_by_id("dismiss-button-element")) > 0 else False
             if dismiss_button_element_exist == True:
-                WebDriverWait(driver, 30).until(EC.text_to_be_present_in_element((By.ID, "count-down-text"), "1 秒後即可獲得獎勵"))
-                driver.find_element_by_id("dismiss-button-element").click()
+                #WebDriverWait(driver, 30).until(EC.text_to_be_present_in_element((By.ID, "count-down-text"), "1 秒後即可獲得獎勵"))
+                WebDriverWait(driver, 180).until(EC.element_to_be_clickable((By.ID, "dismiss-button-element"))).click()
+                #driver.find_element_by_id("dismiss-button-element").click()
                 break
     
             close_circle_element_exist = True if len(driver.find_elements_by_xpath('//*[@id="google-rewarded-video"]/img[3]')) > 0 else False
             if close_circle_element_exist == True:
                 print("close_circle_element_exist:", close_circle_element_exist)
-                WebDriverWait(driver, 30).until(EC.text_to_be_present_in_element((By.CLASS_NAME, "rewardedAdUiAttribution"), "Reward in 1 seconds"))
+                WebDriverWait(driver, 180).until(EC.text_to_be_present_in_element((By.CLASS_NAME, "rewardedAdUiAttribution"), "Reward in 1 seconds"))
                 time.sleep(3)  # 播放結束
                 driver.find_element_by_xpath('//*[@id="google-rewarded-video"]/img[3]').click()
                 break
@@ -128,7 +128,8 @@ for times in range(10):
         time.sleep(3)  # 滾動至頁底
         action.move_to_element(agree_confirm).click().perform()  # 滑鼠移動到"我已閱讀注意事項，並確認兌換此商品"<label> Tag元素點擊打勾(https://stackoverflow.com/questions/40170915/why-actionchainsdriver-move-to-elementelem-click-perform-twice)
         time.sleep(3)  # 觀察打勾
-        driver.find_element_by_class_name("c-primary").click()  # 確定兌換
+        WebDriverWait(driver, 3).until(EC.element_to_be_clickable((By.CLASS_NAME, "c-primary"))).click()
+        #driver.find_element_by_class_name("c-primary").click()  # 確定兌換
     
         btn_danger_element_exist = True if len(driver.find_elements_by_class_name("btn-danger")) > 0 else False  # 您尚未勾選「我已閱讀注意事項，並確認兌換此商品」
         while btn_danger_element_exist == True:
