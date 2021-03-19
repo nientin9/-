@@ -1,4 +1,4 @@
-# Python Web Crawler Lab
+# Python Web Crawler
 ## Selenium自動測試-觀看廣告兌換抽抽樂活動抽獎機會
 Step 1. rawdata = "add cookies"中複製貼上登入帳號後的cookie  
 Step 2. 執行Selenium
