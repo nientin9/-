@@ -50,7 +50,7 @@ for key, morsel in cookie.items():
 times = 0  # selenium 執行次數
 for times in range(10):
     for lucky_draw_link in lucky_draw_links:
-        driver.get("lucky_draw_link")  # get(抽抽樂連結)
+        driver.get(lucky_draw_link)  # get(抽抽樂連結)
         driver.find_element_by_class_name("c-accent-o").click()  # 看廣告免費兌換
     
         wait = ui.WebDriverWait(driver, 10)  # Python+Selenium定位不到元素常見原因及解決辦法(https://www.cnblogs.com/awakenedy/articles/9778634.html)
