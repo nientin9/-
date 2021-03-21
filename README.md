@@ -3,7 +3,7 @@
 Step 1. rawdata = "add cookies"中複製貼上登入帳號後的cookie  
 Step 2. 執行Selenium
 
-執行過程中，網頁可能彈跳出錯誤視窗，造成瀏覽器關閉，需重新執行Selenium  
+執行過程中，網頁可能彈跳出錯誤視窗，需重新執行Selenium  
 錯誤訊息包含:  
 * 發生錯誤，請重新嘗試(1)
 * 廣告能量補充中 請稍後再試。
