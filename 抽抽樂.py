@@ -146,5 +146,6 @@ for times in range(2):
 
         submit = wait.until(lambda driver: driver.find_element_by_class_name("btn-primary"))  # 您確定要兌換此商品嗎？
         submit.click()
+    time.sleep(180)
     times += 1
 driver.quit()
