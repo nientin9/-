@@ -53,7 +53,7 @@ for times in range(2):
         driver.get(lucky_draw_link)  # get(抽抽樂連結)
         driver.find_element_by_class_name("c-accent-o").click()  # 看廣告免費兌換
 
-        wait = ui.WebDriverWait(driver, 10)  # Python+Selenium定位不到元素常見原因及解決辦法(https://www.cnblogs.com/awakenedy/articles/9778634.html)
+        wait = ui.WebDriverWait(driver, 10)  # Python+Selenium定位不到元素常見原因及解決辦法(https://support.i-search.com.cn/article/1561452266407)
         # question-popup
         question_popup_element_exist = True if len(driver.find_elements_by_id("answer-count")) > 0 else False  # 利用"共需答對幾題?"判斷是否彈跳出勇者問答題
         if question_popup_element_exist == True:
@@ -126,7 +126,7 @@ for times in range(2):
         action = ActionChains(driver)
         time.sleep(3)  # 滾動至頁底
         action.move_to_element(agree_confirm).click().perform()  # 滑鼠移動到"我已閱讀注意事項，並確認兌換此商品"<label> Tag元素點擊打勾(https://stackoverflow.com/questions/40170915/why-actionchainsdriver-move-to-elementelem-click-perform-twice)
-        time.sleep(3)  # 觀察打勾
+        #time.sleep(3)  # 觀察打勾
         WebDriverWait(driver, 180).until(EC.element_to_be_clickable((By.CLASS_NAME, "c-primary"))).click()
         # driver.find_element_by_class_name("c-primary").click()  # 確定兌換
 
@@ -136,7 +136,7 @@ for times in range(2):
             print("您尚未勾選「我已閱讀注意事項，並確認兌換此商品」")
             driver.find_element_by_class_name("btn-danger").click()
             action.move_to_element(agree_confirm).click().perform()  # 滑鼠移動到"我已閱讀注意事項，並確認兌換此商品"<label> Tag元素點擊打勾
-            time.sleep(3)  # 觀察打勾
+            #time.sleep(3)  # 觀察打勾
             driver.find_element_by_class_name("c-primary").click()  # 確定兌換
             btn_danger_element_exist = True if len(driver.find_elements_by_class_name("btn-danger")) > 0 else False
             if btn_danger_element_exist == False:
@@ -146,6 +146,7 @@ for times in range(2):
 
         submit = wait.until(lambda driver: driver.find_element_by_class_name("btn-primary"))  # 您確定要兌換此商品嗎？
         submit.click()
-    time.sleep(180)
-    times += 1
+    #time.sleep(180)
+    #times += 1
 driver.quit()
+
