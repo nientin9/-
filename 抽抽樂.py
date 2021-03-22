@@ -33,12 +33,13 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+rawdata = input("請輸入Cookie: ")
+
 driver = Chrome("./chromedriver")
 driver.get("https://fuli.gamer.com.tw")
 driver.maximize_window()
 
 # selenium add cookies(帳密)
-rawdata = 'add cookies'
 cookie = SimpleCookie()
 cookie.load(rawdata)
 cookies = {}
@@ -48,7 +49,8 @@ for key, morsel in cookie.items():
     driver.add_cookie({"name": key, "value": morsel.value})
 
 times = 0  # selenium 執行次數
-for times in range(2):
+for times in range(10):
+    print("迴圈", times + 1)
     for lucky_draw_link in lucky_draw_links:
         driver.get(lucky_draw_link)  # get(抽抽樂連結)
         driver.find_element_by_class_name("c-accent-o").click()  # 看廣告免費兌換
@@ -96,23 +98,24 @@ for times in range(2):
             if close_element_exist == True:
                 print("close_element_exist:", close_element_exist)
                 try:
-                    WebDriverWait(driver, 180).until(EC.invisibility_of_element_located((By.ID, "count_down")))  # visibility: hidden 0 秒後可獲得獎勵(https://www.itread01.com/content/1547684126.html)
-                    WebDriverWait(driver, 180).until(EC.element_to_be_clickable((By.ID, "close_button_icon"))).click()
+                    WebDriverWait(driver, 360).until(EC.invisibility_of_element_located((By.ID, "count_down")))  # visibility: hidden 0 秒後可獲得獎勵(https://www.itread01.com/content/1547684126.html)
+                    WebDriverWait(driver, 360).until(EC.element_to_be_clickable((By.ID, "close_button_icon"))).click()
                 except TimeoutException:
                     print("TimeoutException", TimeoutException)
-                    WebDriverWait(driver, 180).until(EC.invisibility_of_element_located((By.ID, "count_down")))
-                    WebDriverWait(driver, 180).until(EC.element_to_be_clickable((By.ID, "close_button_icon"))).click()
+                    WebDriverWait(driver, 360).until(EC.invisibility_of_element_located((By.ID, "count_down")))
+                    WebDriverWait(driver, 360).until(EC.element_to_be_clickable((By.ID, "close_button_icon"))).click()
                 break
 
             dismiss_button_element_exist = True if len(driver.find_elements_by_id("dismiss-button-element")) > 0 else False
             if dismiss_button_element_exist == True:
-                WebDriverWait(driver, 180).until(EC.element_to_be_clickable((By.ID, "dismiss-button-element"))).click()
+                print("dismiss_button_element_exist:", dismiss_button_element_exist)
+                WebDriverWait(driver, 360).until(EC.element_to_be_clickable((By.ID, "dismiss-button-element"))).click()
                 break
 
             close_circle_element_exist = True if len(driver.find_elements_by_xpath('//*[@id="google-rewarded-video"]/img[3]')) > 0 else False
             if close_circle_element_exist == True:
                 print("close_circle_element_exist:", close_circle_element_exist)
-                WebDriverWait(driver, 180).until(EC.text_to_be_present_in_element((By.CLASS_NAME, "rewardedAdUiAttribution"), "Reward in 1 seconds"))
+                WebDriverWait(driver, 360).until(EC.text_to_be_present_in_element((By.CLASS_NAME, "rewardedAdUiAttribution"), "Reward in 1 seconds"))
                 time.sleep(3)  # 播放結束
                 driver.find_element_by_xpath('//*[@id="google-rewarded-video"]/img[3]').click()
                 break
@@ -126,8 +129,8 @@ for times in range(2):
         action = ActionChains(driver)
         time.sleep(3)  # 滾動至頁底
         action.move_to_element(agree_confirm).click().perform()  # 滑鼠移動到"我已閱讀注意事項，並確認兌換此商品"<label> Tag元素點擊打勾(https://stackoverflow.com/questions/40170915/why-actionchainsdriver-move-to-elementelem-click-perform-twice)
-        #time.sleep(3)  # 觀察打勾
-        WebDriverWait(driver, 180).until(EC.element_to_be_clickable((By.CLASS_NAME, "c-primary"))).click()
+        time.sleep(3)  # 觀察打勾
+        WebDriverWait(driver, 360).until(EC.element_to_be_clickable((By.CLASS_NAME, "c-primary"))).click()
         # driver.find_element_by_class_name("c-primary").click()  # 確定兌換
 
         # 您尚未勾選「我已閱讀注意事項，並確認兌換此商品」
@@ -136,7 +139,7 @@ for times in range(2):
             print("您尚未勾選「我已閱讀注意事項，並確認兌換此商品」")
             driver.find_element_by_class_name("btn-danger").click()
             action.move_to_element(agree_confirm).click().perform()  # 滑鼠移動到"我已閱讀注意事項，並確認兌換此商品"<label> Tag元素點擊打勾
-            #time.sleep(3)  # 觀察打勾
+            time.sleep(3)  # 觀察打勾
             driver.find_element_by_class_name("c-primary").click()  # 確定兌換
             btn_danger_element_exist = True if len(driver.find_elements_by_class_name("btn-danger")) > 0 else False
             if btn_danger_element_exist == False:
@@ -146,7 +149,8 @@ for times in range(2):
 
         submit = wait.until(lambda driver: driver.find_element_by_class_name("btn-primary"))  # 您確定要兌換此商品嗎？
         submit.click()
-    #time.sleep(180)
-    #times += 1
+        time.sleep(360)
+    #time.sleep(360)
+    times += 1
 driver.quit()
 
