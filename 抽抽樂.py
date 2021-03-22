@@ -149,8 +149,9 @@ for times in range(10):
 
         submit = wait.until(lambda driver: driver.find_element_by_class_name("btn-primary"))  # 您確定要兌換此商品嗎？
         submit.click()
-        time.sleep(360)
+        time.sleep(480) #廣告間隔(廣告間隔太密集容易彈跳出錯誤視窗)
     #time.sleep(360)
     times += 1
 driver.quit()
+
 
