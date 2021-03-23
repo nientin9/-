@@ -1,4 +1,4 @@
-# Python Web Crawler
+# Python Lab
 ## Selenium自動測試-觀看廣告兌換抽抽樂活動抽獎機會
 Step 1. 輸入登入帳號後的cookie  
 (cookie一般都存在一定的時效，不同網站的cookie失效時間不同，所以當cookie失效之後需要重新手動登入獲取！)
