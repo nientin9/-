@@ -1,9 +1,9 @@
 # Python Lab
 ## Selenium自動測試-觀看廣告兌換抽抽樂活動抽獎機會
-Step 1. 輸入登入帳號後的cookie  
-(cookie一般都存在一定的時效，不同網站的cookie失效時間不同，所以當cookie失效之後需要重新手動登入獲取！)
+Step 1. 執行Selenium  
 
-Step 2. 執行Selenium
+Step 2. 輸入登入帳號後的cookie  
+(cookie一般都存在一定的時效，不同網站的cookie失效時間不同，所以當cookie失效之後需要重新手動登入獲取！)
 
 備註: 執行過程中，網頁可能彈跳出錯誤視窗，需重新執行Selenium  
 錯誤訊息包含:  
