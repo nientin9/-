@@ -51,14 +51,15 @@ for key, morsel in cookie.items():
 times = 0  # selenium 執行次數
 for times in range(10):
     print("迴圈", times + 1)
-    for lucky_draw_link in iter(lucky_draw_links):
+    for lucky_draw_link in lucky_draw_links:
         driver.get(lucky_draw_link)  # get(抽抽樂連結)
 
         #本日免費兌換次數已用盡
         is_disable_element_exist = True if len(driver.find_elements_by_class_name("is-disable")) > 0 else False
         if is_disable_element_exist == True:
+            print(lucky_draw_link)
             print("本日免費兌換次數已用盡")
-            next(iter(lucky_draw_links))
+            continue
 
         driver.find_element_by_class_name("c-accent-o").click()  # 看廣告免費兌換
 
@@ -159,4 +160,6 @@ for times in range(10):
     time.sleep(180) #廣告間隔(廣告間隔太密集容易彈跳出錯誤視窗)
     times += 1
 driver.quit()
+
+
 
