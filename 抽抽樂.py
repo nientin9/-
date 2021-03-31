@@ -48,20 +48,24 @@ for key, morsel in cookie.items():
     cookies[key] = morsel.value
     driver.add_cookie({"name": key, "value": morsel.value})
 
+loopcount = 10
 times = 0  # selenium 執行次數
-for times in range(10):
+while times < loopcount:
     print("迴圈", times + 1)
     for lucky_draw_link in lucky_draw_links:
         driver.get(lucky_draw_link)  # get(抽抽樂連結)
 
-        #本日免費兌換次數已用盡
+        # 本日免費兌換次數已用盡
         is_disable_element_exist = True if len(driver.find_elements_by_class_name("is-disable")) > 0 else False
         if is_disable_element_exist == True:
-            print(lucky_draw_link)
-            print("本日免費兌換次數已用盡")
+            obj = driver.find_elements_by_class_name("is-disable")
+            print(obj[0].text, lucky_draw_link)
+            if obj[0].text.__contains__("廣告能量補充中"):
+                loopcount += 1
             continue
 
-        driver.find_element_by_class_name("c-accent-o").click()  # 看廣告免費兌換
+        # 看廣告免費兌換
+        WebDriverWait(driver, 60).until(EC.element_to_be_clickable((By.CLASS_NAME, "c-accent-o"))).click()
 
         wait = ui.WebDriverWait(driver, 10)  # Python+Selenium定位不到元素常見原因及解決辦法(https://support.i-search.com.cn/article/1561452266407)
         # question-popup
@@ -74,8 +78,7 @@ for times in range(10):
             element_id = 1
             for questions in range(answer_count):
                 question_element_id = "question-" + str(element_id)
-                options = wait.until(
-                    lambda driver: driver.find_element_by_id(question_element_id).find_elements_by_class_name("fuli-option"))  # options = list[0, 1, 2]
+                options = wait.until(lambda driver: driver.find_element_by_id(question_element_id).find_elements_by_class_name("fuli-option"))  # options = list[0, 1, 2]
                 data_answer = wait.until(lambda driver: driver.find_element_by_id(question_element_id).find_element_by_tag_name('a')).get_attribute('data-answer')  # data_answer = 'str' 3
                 data_answer = int(data_answer) - 1
                 options[data_answer].click()
@@ -93,53 +96,68 @@ for times in range(10):
             if_watch_ad = wait.until(lambda driver: driver.find_element_by_class_name("btn-primary"))
             if_watch_ad.click()
         except TimeoutException:
-            print('if_watch_ad: TimeoutException(沒有彈跳出"是否觀看廣告?"視窗)')
+            print("if_watch_ad: TimeoutException(無廣告)")
             pass
 
         # close_ad
         # print(len(driver.find_elements_by_tag_name('iframe')))
         iframe = wait.until(lambda driver: driver.find_elements_by_tag_name('iframe')[-1])  # python+selenium 自動化過程中遇到的元素不可見時間以及webelement不可見的處理方法(https://iter01.com/467737.html)
-        driver.switch_to.frame(iframe)
         # 有三種不同的close_ad按鈕(視廣告出現型態而定)
-        while True:
-            close_element_exist = True if len(driver.find_elements_by_id("close_button_icon")) > 0 else False
-            if close_element_exist == True:
-                print("close_element_exist:", close_element_exist)
-                try:
-                    WebDriverWait(driver, 360).until(EC.invisibility_of_element_located((By.ID, "count_down")))  # visibility: hidden 0 秒後可獲得獎勵(https://www.itread01.com/content/1547684126.html)
-                    WebDriverWait(driver, 360).until(EC.element_to_be_clickable((By.ID, "close_button_icon"))).click()
-                except TimeoutException:
-                    print("TimeoutException", TimeoutException)
-                    WebDriverWait(driver, 360).until(EC.invisibility_of_element_located((By.ID, "count_down")))
-                    WebDriverWait(driver, 360).until(EC.element_to_be_clickable((By.ID, "close_button_icon"))).click()
+        driver.switch_to.frame(iframe)
+        try:
+            while True:
+                close_element_exist = True if len(driver.find_elements_by_id("close_button_icon")) > 0 else False
+                if close_element_exist == True:
+                    print("close_element_exist:", close_element_exist)
+                    WebDriverWait(driver, 60).until(EC.invisibility_of_element_located((By.ID, "count_down")))  # visibility: hidden 0 秒後可獲得獎勵(https://www.itread01.com/content/1547684126.html)
+                    WebDriverWait(driver, 60).until(EC.element_to_be_clickable((By.ID, "close_button_icon"))).click()
+                    break
+
+                dismiss_button_element_exist = True if len(driver.find_elements_by_id("dismiss-button-element")) > 0 else False
+                if dismiss_button_element_exist == True:
+                    print("dismiss_button_element_exist:", dismiss_button_element_exist)
+                    WebDriverWait(driver, 60).until(EC.element_to_be_clickable((By.ID, "dismiss-button-element"))).click()
+                    break
+
+                close_circle_element_exist = True if len(driver.find_elements_by_xpath('//*[@id="google-rewarded-video"]/img[3]')) > 0 else False
+                if close_circle_element_exist == True:
+                    print("close_circle_element_exist:", close_circle_element_exist)
+                    WebDriverWait(driver, 60).until(EC.text_to_be_present_in_element((By.CLASS_NAME, "rewardedAdUiAttribution"), "Reward in 1 seconds"))
+                    time.sleep(3)  # 播放結束
+                    WebDriverWait(driver, 60).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="google-rewarded-video"]/img[3]'))).click()
+                    break
                 break
 
-            dismiss_button_element_exist = True if len(driver.find_elements_by_id("dismiss-button-element")) > 0 else False
-            if dismiss_button_element_exist == True:
-                print("dismiss_button_element_exist:", dismiss_button_element_exist)
-                WebDriverWait(driver, 360).until(EC.element_to_be_clickable((By.ID, "dismiss-button-element"))).click()
-                break
-
-            close_circle_element_exist = True if len(driver.find_elements_by_xpath('//*[@id="google-rewarded-video"]/img[3]')) > 0 else False
-            if close_circle_element_exist == True:
-                print("close_circle_element_exist:", close_circle_element_exist)
-                WebDriverWait(driver, 360).until(EC.text_to_be_present_in_element((By.CLASS_NAME, "rewardedAdUiAttribution"), "Reward in 1 seconds"))
-                time.sleep(3)  # 播放結束
-                driver.find_element_by_xpath('//*[@id="google-rewarded-video"]/img[3]').click()
-                break
-            break
+        except TimeoutException:
+            # 已移除廣告。(這個廣告使用了太多裝置資源，因此 Chrome 已將其移除。)
+            main_message_element_exist = True if len(driver.find_elements_by_id("main-message")) > 0 else False
+            if main_message_element_exist == True:
+                print("main_message_element_exist(已移除廣告):", main_message_element_exist, ":", lucky_draw_link)
+                driver.refresh()
+                time.sleep(3)
+            loopcount += 1
+            continue
 
         # agree_confirm
         driver.switch_to.default_content()
-        time.sleep(3)  # 等待換頁
+        time.sleep(5)  # 等待換頁
+
+        # 發生錯誤，請重新嘗試(1) 或  廣告能量補充中 請稍後再試
+        btn_danger_element_exist = True if len(driver.find_elements_by_class_name("btn-danger")) > 0 else False
+        if btn_danger_element_exist == True:
+            print("btn_danger_element_exist(發生錯誤):", btn_danger_element_exist, ":", lucky_draw_link)
+            driver.find_element_by_class_name("btn-danger").click()
+            driver.refresh()
+            loopcount += 1
+            continue
+
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")  # Selenium Page down(https://stackoverflow.com/questions/20986631/how-can-i-scroll-a-web-page-using-selenium-webdriver-in-python)
         agree_confirm = driver.find_element_by_css_selector('#buyD > div.flex-center.agree-confirm > div > label')
         action = ActionChains(driver)
         time.sleep(3)  # 滾動至頁底
         action.move_to_element(agree_confirm).click().perform()  # 滑鼠移動到"我已閱讀注意事項，並確認兌換此商品"<label> Tag元素點擊打勾(https://stackoverflow.com/questions/40170915/why-actionchainsdriver-move-to-elementelem-click-perform-twice)
         time.sleep(3)  # 觀察打勾
-        WebDriverWait(driver, 360).until(EC.element_to_be_clickable((By.CLASS_NAME, "c-primary"))).click()
-        # driver.find_element_by_class_name("c-primary").click()  # 確定兌換
+        WebDriverWait(driver, 60).until(EC.element_to_be_clickable((By.CLASS_NAME, "c-primary"))).click()
 
         # 您尚未勾選「我已閱讀注意事項，並確認兌換此商品」
         btn_danger_element_exist = True if len(driver.find_elements_by_class_name("btn-danger")) > 0 else False
@@ -157,9 +175,6 @@ for times in range(10):
 
         submit = wait.until(lambda driver: driver.find_element_by_class_name("btn-primary"))  # 您確定要兌換此商品嗎？
         submit.click()
-    time.sleep(180) #廣告間隔(廣告間隔太密集容易彈跳出錯誤視窗)
     times += 1
+    time.sleep(240) #廣告能量補充中
 driver.quit()
-
-
-
