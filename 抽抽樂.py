@@ -181,5 +181,5 @@ while times < loopcount:
         submit = wait.until(lambda driver: driver.find_element_by_class_name("btn-primary"))  # 您確定要兌換此商品嗎？
         submit.click()
     times += 1
-    #time.sleep(240) #廣告能量補充中
+    time.sleep(240) #廣告能量補充中
 driver.quit()
