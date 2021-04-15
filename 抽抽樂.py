@@ -122,6 +122,11 @@ while times < loopcount:
                 close_circle_element_exist = True if len(driver.find_elements_by_xpath('//*[@id="google-rewarded-video"]/img[3]')) > 0 else False
                 if close_circle_element_exist == True:
                     print("close_circle_element_exist:", close_circle_element_exist)
+                    rewardResumebutton_element_exist = True if len(driver.find_elements_by_class_name("rewardResumebutton")) > 0 else False
+                    # Video will play with sound
+                    if rewardResumebutton_element_exist == True:
+                        print("rewardResumebutton_element_exist:", rewardResumebutton_element_exist)
+                        WebDriverWait(driver, 60).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="google-rewarded-video"]/div[3]/div[7]/div/div[3]/div[2]'))).click()
                     WebDriverWait(driver, 60).until(EC.text_to_be_present_in_element((By.CLASS_NAME, "rewardedAdUiAttribution"), "Reward in 1 seconds"))
                     time.sleep(3)  # 播放結束
                     WebDriverWait(driver, 60).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="google-rewarded-video"]/img[3]'))).click()
@@ -176,5 +181,5 @@ while times < loopcount:
         submit = wait.until(lambda driver: driver.find_element_by_class_name("btn-primary"))  # 您確定要兌換此商品嗎？
         submit.click()
     times += 1
-    time.sleep(240) #廣告能量補充中
+    #time.sleep(240) #廣告能量補充中
 driver.quit()
