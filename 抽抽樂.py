@@ -123,14 +123,18 @@ while times < loopcount:
                 if close_circle_element_exist == True:
                     print("close_circle_element_exist:", close_circle_element_exist)
                     # Video will play with sound
-                    rewardResumebutton_1_element_exist = True if len(driver.find_elements_by_xpath('//*[@id="google-rewarded-video"]/div[3]/div[7]/div/div[3]/div[2]'))> 0 else False
-                    if rewardResumebutton_1_element_exist == True:
-                        print("rewardResumebutton_1_element_exist:", rewardResumebutton_1_element_exist)
-                        WebDriverWait(driver, 6).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="google-rewarded-video"]/div[3]/div[7]/div/div[3]/div[2]'))).click()
-                    rewardResumebutton_2_element_exist = True if len(driver.find_elements_by_xpath('// *[ @ id = "google-rewarded-video"] / div[3] / div[5] / div / div[3] / div[2]')) > 0 else False
-                    if rewardResumebutton_2_element_exist == True:
-                        print("rewardResumebutton_2_element_exist:", rewardResumebutton_2_element_exist)
-                        WebDriverWait(driver, 6).until(EC.element_to_be_clickable((By.XPATH, '// *[ @ id = "google-rewarded-video"] / div[3] / div[5] / div / div[3] / div[2]'))).click()
+                    while True:
+                        rewardResumebutton_1_element_exist = True if len(driver.find_elements_by_xpath('//*[@id="google-rewarded-video"]/div[3]/div[7]/div/div[3]/div[2]'))> 0 else False
+                        if rewardResumebutton_1_element_exist == True:
+                            print("rewardResumebutton_1_element_exist:", rewardResumebutton_1_element_exist)
+                            WebDriverWait(driver, 6).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="google-rewarded-video"]/div[3]/div[7]/div/div[3]/div[2]'))).click()
+                            break
+                        rewardResumebutton_2_element_exist = True if len(driver.find_elements_by_xpath('// *[ @ id = "google-rewarded-video"] / div[3] / div[5] / div / div[3] / div[2]')) > 0 else False
+                        if rewardResumebutton_2_element_exist == True:
+                            print("rewardResumebutton_2_element_exist:", rewardResumebutton_2_element_exist)
+                            WebDriverWait(driver, 6).until(EC.element_to_be_clickable((By.XPATH, '// *[ @ id = "google-rewarded-video"] / div[3] / div[5] / div / div[3] / div[2]'))).click()
+                            break
+                        break
                     WebDriverWait(driver, 60).until(EC.text_to_be_present_in_element((By.CLASS_NAME, "rewardedAdUiAttribution"), "Reward in 1 seconds"))
                     time.sleep(3)  # 播放結束
                     WebDriverWait(driver, 60).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="google-rewarded-video"]/img[3]'))).click()
