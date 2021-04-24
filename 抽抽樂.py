@@ -145,6 +145,7 @@ while times < loopcount:
                 driver.refresh()
                 time.sleep(3)
             loopcount += 1
+            print("loopcount += 1")
             continue
 
         # agree_confirm
